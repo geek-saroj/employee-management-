@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse
-from .models import Employee, Role, Department
+from .models import Employee, Role, Department,Laptop
 from datetime import datetime
 from django.db.models import Q
 
@@ -10,12 +10,14 @@ def index(request):
 
 
 def all_emp(request):
-    emps = Employee.objects.all()
+    emps = Employee.objects.all()   
     context = {
         'emps': emps
     }
-    print(context)
+    print("this is",context)
     return render(request, 'view_all_emp.html', context)
+
+
 
 
 def add_emp(request):
@@ -73,3 +75,24 @@ def filter_emp(request):
         return render(request, 'filter_emp.html')
     else:
         return HttpResponse('An Exception Occurred')
+    
+
+def add_laptop(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        price = request.POST['price']
+        new_laptop = Laptop(name = name, price = price)
+        new_laptop.save()
+        return HttpResponse('Laptop added Successfully')
+    elif request.method=='GET':
+        return render(request, 'add_laptop.html')
+    else:
+        return HttpResponse("An Exception Occured! Laptop Has Not Been Added")
+    
+
+def view_laptop(request):
+    laptops = Laptop.objects.all()
+    context = {
+        'laptops': laptops
+    }
+    return render(request, 'view_laptop.html', context)
